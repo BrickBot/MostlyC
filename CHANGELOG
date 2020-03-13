@@ -1,0 +1,48 @@
+--------------------beta13
+Added example files for motors, sensors, sound, tasks, display
+Fixed an error in !b, chk test was backwards
+Fixed Warning in use of EMIT1 in main.cpp. there were 3 places with ...,)
+--------------------beta12
+Completed implementation of FOR loop statement options.
+Deleted () requirement on RETURN statement.
+Added Release History file.
+--------------------beta11
+Eliminated MSVC++ dependency.
+Switched to an open-source C preprocessor. 
+--------------------beta10
+Added error messages (over 200).
+Fixed a few bugs related to error checking.
+Tested all RCX2 #defines to make sure that compiler generated the correct code and that ScriptEd assembled it.
+Am still working on an RCX functional test for all library functions. 
+--------------------beta9
+started on regression test for devices.
+found bug in lasm in which operands with a leading zero not handled properly. sorry users of previous releases.
+Renaming of builtin variables and some rcx2.h methods.
+Fixed double access to special operands on % op.
+--------------------beta8
+Create 4 extensive regression tests. See tregression.txt in the zip file.
+Regression tests exposed a number of bugs. All fixed.
+Added array parameters.
+--------------------beta7
+added regression test program. oops.
+then added a few more tests but didn't run on rcx.
+naturally a bug showed up, true/false as parameters. 3/1b fixes it. updated manual.
+fixed xor, array ref problem and all known bugs.
+added E notation 3.0E2 to float constants. 
+--------------------beta6
+Fixed an error in array references with constant subscripts.
+Added const bool arrays.
+Renamed functions in rcx2.h based on user experience.
+Added explanation for USB tower users in the manual and a few other clarifications. 
+--------------------beta5
+Added Math library in math.h # include file. Read the manual. #defines are used to "import" individual functions so that only the code for functions that are used is included. 
+--------------------beta4
+--------------------beta3
+Completed array op= ++ -- except for ^=
+Added documentation for exponentiation **
+Added an event function for sources 25,27-31
+--------------------beta2
+1. Expanded documentation
+2. Task/procedure/global int/float arrays are now supported. 
+--------------------beta1
+Initial release

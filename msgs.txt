@@ -1,0 +1,209 @@
+:1:Closing } without opening {
+:2:if, for or while { but missing or mismatched }
+:3:union { but missing or mismatched }
+:4:task { but missing or mismatched }
+:5:procedure { but missing or mismatched }
+:6:task main() {} missing
+:7:/* to start comment but missing close symbols */
+:8:name %s longer than 35 character limit
+:9:union {   <-- { missing
+:10:statements are only allowed inside tasks or procedures
+:11:%s is misspelled or not declared
+:12:%s is a read-only variable, no assignments are allowed
+:13:array elements must be referenced as x[i], missing [
+:14:array elements must be referenced as x[i], missing ]
+:15:array elements must be referenced as x[i], i must be an int
+:16: ++ -- &= etc. not allowed on bool array elements
+:17:missing = in assignment statement i.e. x = 23;
+:18:mismatched type on assignment; use a cast i.e. x=float(i);
+:19:only int is allowed for x %= i;
+:20:float is not allowed for &= or |=
+:21:compiler error; send details to bobcook47@hotmail.com
+:22:subscript %s is less than 0, not allowed
+:23:bool arrays can not be used in procedures; use int instead
+:24:subscript %s >= 15 for a bool array
+:25:subscript %s >30 for an array declared outside a task or procedure
+:26:subscript %s >14 for an array declared inside a task or procedure
+:27: ++ -- not allowed on bool variables
+:28: += etc. not allowed on bool variables
+:29: ^= not implemented yet for bool variables
+:30: %0 is illegal because dividing by zero is undefined
+:31:float is not allowed for ^=
+:32:invalid start of a statement; read the manual for statement syntax
+:33:only syntax supported is x=3; for(;--x>=0;) { ... }
+:34:missing identifier in for (;--identifier>=0;) { ... }
+:35:for loop identifier %s is misspelled or not declared
+:36:for loop identifier %s is read-only
+:37:for loop identifier %s is bool, must be int or float
+:38: for (;--x>=0;) {   <-- missing {
+:39:for loop identifier %s is already used in an enclosing for loop
+:40:break or continue statements can only be used in while or for
+:41:switch statement not implemented yet
+:42:do statement not implemented yet
+:43:repeat statement not implemented yet
+:44:until statement not implemented yet
+:45: if (b) { ... } else if (b) { ... };  missing required {
+:46:missing ' ' in asm:C:I { ...
+:47:asm:C:I... >= 15 characters
+:48:missing { in asm:C:I { ...
+:49:more than 5 arguments not supported in asm:C:I { ...
+:50:argument %s in asm must be a string or integer constant
+:51:argument %s in asm must be an integer
+:52:argument %s in asm cannot be a constant
+:53:argument %s in asm must be a global variable
+:54:argument %s in asm must be an integer constant or a task name
+:55:argument %s in asm must be a global variable or Sensor1 etc.
+:56: if (b) { ... } else { ... };  missing required { after else
+:57:return statement is not allowed in tasks; use stop statement
+:58:return (expression) cannot be used with a void return type
+:59:return; cannot be used in a function with a return type
+:60:variable name %s longer than 35 character limit
+:61:variable name %s has already been declared
+:62:array name %s[] must be initialized; int x[3]={4,5,6};
+:63:char %s[]=" ... has a syntax error in the string constant
+:64:array name %s[] must be initialized; int x[3]={ <--missing {
+:65:{ ... } constant %s in the list must be of integer type
+:66:{ ... } constant %s in the list must be of float type
+:67:{ ... } constant %s in the list must be of bool type
+:68:int x[]={7,8,9};  missing or misplaced , or }
+:69:const for types other than initialized arrays not implemented
+:70:dimension or bound [10] for array %s must be an int constant
+:71:int %s[10] missing or misplaced ]
+:72:dimension or bound [10] for array %s <=1
+:73:dimension or bound [10] for bool array %s > 15
+:74:array %s with [5,6] more than one dimension not implemented
+:75:illegal declaration syntax int x  <-- missing identifier
+:76:tasks cannot be nested within tasks or procedures; missing }?
+:77:task name %s longer than 35 character limit
+:78:task main() { ... }  missing or misplaced task name
+:79:task name %s is already defined
+:80:task main() { ... }  missing or misplaced (
+:81:task main() { ... }  missing or misplaced )
+:82:task main() { ... }  missing or misplaced {
+:83: while (b) { ... } missing or misplaced (
+:84: while (b) { ... } missing or misplaced {
+:85:procedure %s has a name > 35 character limit
+:86:procedure %s has a name that is already defined
+:87: %s cannot be nested in another task or procedure
+:88:int %s() { ... }  missing or misplaced (
+:89:int f(int x, bool y) { ... } missing parameter %s name
+:90:parameter name %s is longer than the 35 character limit
+:91:paramter name %s is defined twice
+:92:int f(float %s[]) { ... } missing or misplaced ]
+:93:bool parameters such as %s[] are not supported
+:94:const parameters are not implemented yet
+:95:int %s() { ... }  missing or misplaced )
+:96:only up to 8 parameters are currently supported
+:97:start name;  <-- name is missing or misplaced
+:98:start %s;  <-- name > 35 character limit
+:99:start %s;  is a forward reference, undefined, misspelled
+:100:start %s;  is defined but is not a task name
+:101:stop name;  <-- name is missing or misplaced
+:102:stop %s;  <-- name > 35 character limit
+:103:stop %s;  is a forward reference, undefined, misspelled
+:104:stop %s;  is defined but is not a task name
+:105:syntax error; #if 0 ... #endif until it compiles clean
+:106:16 variables for procedures/tasks exceeded
+:107:32 variables for globals exceeded
+:108:only 10 tasks are allowed per program
+:109:only 15 bool variables are allowed per task
+:110:only 15 bool variables are allowed for all procedures
+:111:only 8 procedure are allowed per program
+:112:syntax error "hi \nho" or 'help'
+:113:syntax error 0x56 or 67 or 8.9 or 034
+:114: 0ddd is an octal constant; digits must be 0-7
+:115:decimal constant has more than one decimal point
+:116: 3.4e+2  <-- no digits in exponent
+:117:procedure calls are not allowed within procedures
+:118:missing or misplaced ( on procedure call
+:119:missing argument on procedure call ( ,
+:120: %s arguments does not match procedure declaration
+:121:argument %s must be an array
+:122:argument %s must be an int array
+:123:argument %s must be a float array
+:124:argument %s must be an int
+:125:argument %s must be a float
+:126:argument %s must be a bool
+:127:fewer than %s arguments does not match declaration
+:128:identifier %s in expression >35 character limit
+:129: ++ or -- on true illegal
+:130: ++ or -- on false illegal
+:131: ++ or -- on rand illegal
+:132:rand()  <--missing or misplaced (
+:133:rand()  <--missing or misplaced )
+:134:event(5,6)  <--missing or misplaced (
+:135:event(5,6)  <--first argument not an integer constant
+:136:event(5,6)  <--missing or misplaced ,
+:137:event(5,6)  %s not in range 0-5
+:138:event(5,6)  <--second argument not an integer constant
+:139:event(5,6)  %s not in range 0-15
+:140:event(5,6)  <--missing or misplaced )
+:141:++ or -- not legal on builtin function %s
+:142:builtin function %s, missing or misplaced (
+:143:constant arguments illegal for builtin function %s
+:144:argument to int(f) is not bool, float, int
+:145:argument to float(i) is not float or int
+:146:casti(f) must be float, castf(i) must be int
+:147:identifier %s in expression not declared
+:148:++ or -- not allowed on function name %s
+:149:subroutine %s cannot be called as a function
+:150:++ or -- not allowed on array name %s
+:151:parameter array %s cannot be passed as an argument
+:152: bool arrays cannot be passed as arguments yet
+:153:x[i]  <-- missing or misplaced ]
+:154:x[i]  <-- i must be an int
+:155:x[i]  <-- ++ or -- not allowed on bool arrays
+:156:x[i]  <-- bool arrays can't be used in procedures
+:157:x[%s]  <-- subscript < 0
+:158:x[%s]  <-- subscript >=15
+:159:x[i]  <-- ++ or -- not allowed on const arrays
+:160:x[i]  <-- missing or misplaced [
+:161:x[i]  <-- const array cannot be referenced in procedures
+:162:x[i]  <-- i<0 or i>=%s
+:163:++ or -- not allowed for bools or read-only variables
+:164:syntax error in expression
+:165:syntax error in expression or missing (
+:166:++ or -- ( illegal
+:167:missing or misplaced ) in expression
+:168: x=(b)?3:4  <-- missing or misplaced :
+:169: x=(b)?3:4.5  <-- types of two expression must match
+:170:division by zero is undefined
+:171:division by zero is undefined in constant expression
+:172:shift left << constant not an integer
+:173:shift right >> constant not an integer
+:174:% operands in constant expression must be integers
+:175:modulo by zero is undefined in constant expression
+:176:exclusive or ^ operands must be integers
+:177:logical and & operands must be integers
+:178:logical or | operands must be integers
+:179:intger result of constant expression %s <-32768 or >32767
+:180:logical and & operands not integer or bool
+:181:logical or | operands not integer or bool
+:182:power ** right operand can only be a number
+:183:power ** right operand cannot be a fraction
+:184:power ** right operand must be -1 1 2 or 4
+:185:exclusive or operands must be int or bool
+:186:modulo % operands must be integers
+:187:modulo by zero is undefined
+:188:read-only variables not supported as % right operands
+:189:shift operands must be integers
+:190:assignment in expressions not supported or == <--missing =
+:191: !=  <-- missing or misplaced =
+:192:unary + can only be applied to int or float expressions
+:193:float operands not allowed on ~
+:194: - and ~ are not allowed on bool operands
+:195:unary - only allowed on ints and floats
+:196:unary ~ only allowed on ints
+:197:unary ! only allowed on ints and bools
+:198:more arguments than allowed in inline assembly code
+:199:too few arguments in inline assembly code
+:200:functions must contain at least one return statement
+:201:more than 16 local variables in procedure %s
+:202:float sqrt(float x) { ... } <-- missing or misplaced {
+:203:for (id=....) <-- missing or misplaced identifier
+:204:for (int id=....) <-- keyword or type name not allowed as identifier
+:205:for (x=0;x<5;x++) { <-- misplaced } in for loop
+:206:for (x=0;x<5;  { <-- misplaced or missing ;
+:207:for (x=0;x<5; id....) <-- missing or misplaced identifier
+:208:for (x=0;x<5;x++) { <-- missing or misplaced ) in for loop
+:209:for (;; x<5) { <-- this variety of for loop not implemented yet

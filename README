@@ -1,0 +1,472 @@
+Mostly C
+========
+A C-style language for the RCX offering a number of features not present in NQC: true subroutines, functions w/parameters, bool/float types, large const arrays, math library
+
+
+COMPILER USAGE
+
+Original Website – http://mclegocompiler.sf.net/
+
+Prerequisites:
+
+The compiler's assembly language output must be copied and pasted from the compiler's output.txt file into LEGO's ScriptEd to download the program to an RCX2. ScriptEd and the LEGO Assembler Reference Manual are both in the "Program Files\Lego Software" directory after you install the 2.5 SDK available at http://mindstorms.lego.com/sdk2point5/
+
+Be sure that your firmware is version 328.  The file firm0328.lgo is included in sdk2point5.  You can Execute brick version? in RCX2/Script mode in ScriptEd to check your current version.  Set ScriptEd to RCX2/LASM to download MC programs.
+
+All of the RCX2 operations defined in the Assembler Reference Manual can be accessed by #include "rcx2.h".  If a #define name has a C suffix, it means that the arguments must be constants; otherwise, variables are allowed.
+                  PlayToneC(452,30);        /*operands must be constants*/
+                  PlayTone(x*23,30);        /*first operand can involve variables*/
+
+The compiler is normally run in a Command window (Start/Run cmd).
+
+Even though the compiler is for the C language, it does not care what the source file suffix is (normally .c).  The example files all use the .txt suffix so that when you double-click one, it will pop up in a text editor.
+
+The compiler's assembly language output must be copied and pasted from the compiler's output.txt file into LEGO's ScriptEd to download the program to an RCX2. ScriptEd and the LEGO Assembler Reference Manual are both in the "Program Files\Lego Software" directory after you install the 2.5 SDK available at http://mindstorms.lego.com/sdk2point5/
+
+The source text for error messages is in the file msgs.txt that must be in the same directory as the compiler (parser.exe).  At the point that MC has its first "official" release, the hope is that volunteers will translate the file into national language versions, which will then be included in every release.  Any suggestions for improving the messages are welcome. 
+
+**NOTE** To use ScriptEd with a USB tower, you have to select Port/Find then Port/Test.  If you get an "ok" response, you are good to go.  I had to try the USB connector on more than one of my ThinkPad's USB ports before I saw the green light go on.  
+
+Usage:
+
+The usage of the compiler is as follows:
+
+parser [filename] [-s] [-o]
+
+-s : By default, the compiler creates assembly code (LASM) with variable numbers instead of friendly names.  To output assembly with friendly names, use the -s option. Note that -s files will generate an error if assembled by ScriptEd.
+
+-o : By default, the compiler outputs to a file called "output.txt" in the same directory as the compiler.  If the -o option is used, the ouput of the compiler is redirected to stdout
+
+[filename] the filename of the source file.
+
+Example:
+1. Start/Run/  type "cmd"
+2. Create a test program (e.g. test.txt, or try tsound.txt or tdisplay.txt)
+3. cd to directory with parser.exe, rcx2.h, scripted.exe, and your program (e.g. test.txt)
+4. type "parser test.txt"
+   - Note: the preprocessor output is directed to a temporary file temp.txt
+5. Run ScriptEd and select RCX2 and LASM in the menus
+   A. Copy the entire contents of the file output.txt
+   B. Paste that content of output.txt to the ScriptEd window
+   C. Click the icon in ScriptEd to validate and assemble
+   D. Power on RCX and point the IR window towards IR tower
+   E. Click the icon in ScriptEd to download the program
+   F. Push the Run button on the RCX to execute the program
+
+
+Thank you to Kiyoshi Matsui for his open-source C pre-processor, which is now included (mcpp.exe) in the distribution to handle all of the #includes and #defines.
+MCPP project website – http://mcpp.sf.net/
+/*-
+ * MCPP Copyright (c) 1998, 2002-2005 Kiyoshi Matsui <kmatsui@t3.rim.or.jp>
+ * All rights reserved.
+ *
+ * This software including the files in this directory is provided under
+ * the following license.
+ *
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions
+ * are met:
+ * 1. Redistributions of source code must retain the above copyright
+ *    notice, this list of conditions and the following disclaimer.
+ * 2. Redistributions in binary form must reproduce the above copyright
+ *    notice, this list of conditions and the following disclaimer in the
+ *    documentation and/or other materials provided with the distribution.
+ *
+ * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND
+ * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+ * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+ * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR BE LIABLE
+ * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+ * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS
+ * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
+ * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT
+ * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY
+ * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
+ * SUCH DAMAGE.
+ */
+
+
+---------------------------------------------
+T A B L E   O F   C O N T E N T S
+---------------------------------------------
+
+	[MC]
+	Constants
+ 	Data types
+	Variable declarations, assignment
+	Comments
+	Control structures
+	Tasks
+	Operators
+	Functions
+	Preprocessor
+	C features not supported
+	Type Casting
+	Identifiers
+	Layout
+	RCX2/LASM Limitations
+	Math Library
+	An example program
+	
+---------------------------------------------
+Constants
+---------------------------------------------
+The following table lists the minimum and maximum values for variables of the numeric types:
+ 
+        			MIN( )  		MAX( )
+short or int		-32768  		32767
+float				-3276.8		3276.7
+
+A hexadecimal constant is different from an unsigned constant in that it must have a 0x or 0X preceding its first digit. For an octal constant, the leading digit must be a zero.  Note that the same number, like 45, can be expressed either in decimal (45), octal (055), or hexadecimal (0x2D).  Examples:
+        1980    		int
+        03764   		octal (denoted by the leading “0”)  
+        0xCAD   		hexadecimal (denoted by the leading “0x")  
+        CAD    		an identifier, not a number   
+        0X48     		hexadecimal
+
+All real numbers must have a decimal point and  must start with a digit; although, digits are not required in the fraction.  Scientific notation 3.1E+2 is also supported.
+Examples:
+        5.32            		typical float
+        433.            		float without fraction portion
+
+The single quote is used to denote a char constant, while a double quote character denotes a string.  The opening and closing marks must be the same character, and this character cannot occur within the string. A string must not extend over the end of a line.
+
+There is also a notation to represent characters that are not in the language’s character set. The \ character is used as an escape symbol to denote special characters in a character or string constant. The following table lists the escape characters.
+
+			Escape Sequence			Represents
+				\n			New line
+				\r			Carriage return
+				\t			Horizontal tab
+				\’			Single quotation mark
+				\”			Double quotation mark
+				\\			Backslash
+				\0dd			octal digits that encode a character
+
+---------------------------------------------
+Data types
+---------------------------------------------
+
+char  8-bit unsigned (0-255)
+short 16-bit signed (-32768 to +32767)  (up to 31 global and 15 task variables)
+int   16-bit signed (-32768 to +32767)  (up to 31 global and 15 task variables)
+bool  1 Boolean bit (up to 15 task variables and 15 global variables are supported)
+float  one decimal digit of accuracy -3276.8 to +3276.7
+const int <name> []={<constant>...};
+const float <name> []={<constant>...};
+const bool <name> []={<constant>...};
+const char <name> []=<string>;
+int <name>[<integer constant];
+char <name>[<integer constant];
+bool <name>[<integer constant];   maximum dimension of 15
+float <name>[<integer constant];  each array element counts as one variable
+union { <declaration list> };
+
+Be aware that const arrays can only be used in tasks, not procedures.
+The reason is that the RCX2 does not support nested procedure calls and const arrays are implemented as procedures in order to support more than 31 elements.
+
+Be aware that Boolean arrays can only be used in tasks, not procedures. The maximum Boolean array dimension is 15.  Boolean arrays are packed one per word. The maximum size is 15, not 16, because the RCX architecture lacks a shift instruction.  Since a procedure has to be used to calculate the mask used for subscripting, Boolean arrays also cannot be used in procedures.  Array indices (subscripts) range from zero to the array_size-1.  For example, a dimension value of 10 would enable subscripts 0 to 9.
+
+The RCX only supports integer arithmetic. MC implements float by scaling integers by 10 to provide one decimal digit of precision. Be aware that float multiplication is implemented as (x*y)/10 i.e. 2.5*6.0 = (25*60)/10 = 1500/10 = 150 = 15.0.  Thus, it is important to verify that the x*y step does not overflow.
+
+Be aware that float division is implemented as (x*10)/y; thus it is important to verify that (x*10) will not overflow.
+
+Simple anonymous unions are supported.
+
+The number of non-global variables is restricted as follows:
+	|non-global variables feasible|   if and only if 
+		31 >= max(variables in any 1 procedure)+max(variables in any 1 task)
+
+---------------------------------------------
+Variable declarations, assignment	
+---------------------------------------------
+
+To declare a variable:
+
+<Datatype> <variable name>;
+
+Examples of legal variable declarations:
+
+int x;
+float y;
+bool z;
+const int r[]={3,4,5,6};
+float s[5];
+const char s[]="hello world";
+union {
+	int x;
+	float y;
+};
+
+Multiple variable declarations are allowed:
+
+int x, y, z, q;
+
+Declaration and assignment ARE NOT supported.  The following declarations are NOT valid:
+int x=5;
+int x, y=5;
+
+Only one variable can have a value assigned at a time.  The assigment syntax is as follows:
+<variable>=<expression>;
+OR
+<variable>=<function call>;
+OR
+<variablename> <op>= <expression>;   op can be + - * / % & | ^
+
+
+Variables must be declared before use.  The RCX2 is restricted to a total of 15 global Boolean variables and 31 global variables of type char, float or int.  The mc compiler is restricted to 8 parameters of any type, which count as local variables.  The user can declare no more than 15 local or task variables and 15 local Boolean variables. At the current time, ^= is not supported for array references nor or ++ or -- on arrays in expressions i.e. m+x[j]++.
+
+---------------------------------------------
+Comments
+---------------------------------------------
+
+To comment a single line, use two forward slashes.  To comment multiple lines, surround the comment with a /* and */.
+
+Example:
+
+//A single line comment
+
+/*
+A
+multiline
+comment.
+*/
+
+---------------------------------------------
+Control Structures
+---------------------------------------------
+
+The following are the only allowed control structures. Note that the {} and () are mandatory.
+
+if (<Boolean expression>) {
+	<statements>
+}
+
+if (<Boolean expression>) {
+	<statements>
+} else {
+	<statements>
+}
+
+if (<Boolean expression>) {
+	<statements>
+} else if (<Boolean expression>) {
+	<statements>
+} else {
+	<statements>
+}
+
+while (<Boolean expression>) {
+	<statements>
+}
+
+for (;-- <variable name> >=0;) {		//example: for(;--x>=0;){y*=3;}
+	<statements>
+}
+
+for (;;) {
+	<statements>
+}
+
+for (x=0; x<5; x++) {
+	<statements>
+}
+
+for (x=10; x>=5; x--) {
+	<statements>
+}  
+
+return;
+
+return <expression>;
+
+break;
+
+continue;
+
+start <task name>;
+
+stop <task name>;
+
+---------------------------------------------
+Tasks
+---------------------------------------------
+
+Tasks are declared as follows:
+
+task <task name> () { <statements> }
+
+The entry task of a program is named "main".
+
+---------------------------------------------
+Operators
+---------------------------------------------
+
++	add to		3.4+0.7
+-	subtract from	8-3
+*	multiply by		7.2*0.3
+/	divide by		9/3
+%	remainder of	8%3
+&	bitwise and		true&false
+|	bitwise or		true|false
+!	Boolean not		!true
+~	bitwise not		~3
+&&	short-circuit &	(i>0)&&(x[i]==6)
+||	short-circuit |	(i==3)||(i==5)
+++	add 1 to		x++			
+--	subtract 1 from	x--			
+<<	shift left		x<<2			(right operand must be constant)
+>>	shift right		x>>3			(right operand must be constant)
+**	power			x**2			(right operand must be 0,1,-1,2,4)
+==   >   <   >=   <=   !=
++=   -=   *=   /=   %=   &=   |=
+((<Boolean Expression>)?<expression>:expression)      () are required as shown
+
+---------------------------------------------
+Functions
+---------------------------------------------
+
+Functions are declared as follows:
+
+<return type> <function name> ( <parameter list> ) { <statements> }
+
+Valid return types are: void, int, bool, float, char
+
+Parameters are declared with the data type followed by variable name.  If no parameters are needed, no characters are needed between the parenthesis.  If more than one parameter is needed, separate the parameters with a comma.  Pointer and reference parameter syntax are not supported.  Simple argument types are passed "by value"; that is, assignments to parameter names has no effect on argument names. The maximum size of a parameter list is eight names. Each parameter counts as one of the sixteen possible task/local variables.
+
+Array parameters are supported, but only for int and float arguments.  The syntax rule is to place an empty [] after the parameter name.  Array arguments are passed to array parameters "by reference"; that is, assignments to the elements of a parameter array are actually changing the value of the corresponding argument array element.  Constant "const" arrays cannot be passed to array parameters since they are implemented as procedure calls and actually have no data storage.  C provides no means of determining the size of an array; therefore, array arguments are usually paired with an "int" length argument.
+
+Builtin functions are abs(x), min(x,y), max(x,y), rand(), sign(x), event(x,y).
+
+Functions with return types can return a value with the following syntax.  The () are required.
+
+return ( <expression> );
+
+If a return is desired for control purposes, the following syntax is used:
+
+return;
+
+Example function:
+
+int sum(int a, int b)
+{
+	return (a + b);
+}
+
+Function name overloading is not allowed.
+
+---------------------------------------------
+Preprocessor
+---------------------------------------------
+
+The MC parser uses the standard C/C++ preprocessor. See the following web page for a complete reference.
+
+http://msdn.microsoft.com/library/default.asp?url=/library/en-us/vccore98/HTML/predir.asp
+
+---------------------------------------------
+C Features not supported
+---------------------------------------------
+
+Structures
+Pointers (*p)
+References (&p)
+Strings
+Unions
+Enumerated Types
+Various others
+
+---------------------------------------------
+Type casting
+---------------------------------------------
+
+All type casting in MC is explicit in nature.  To cast a variable to another type, use the following convention:
+
+<new datatype>( <expression> )
+
+The supported methods for type casting are float(), bool(), and int()
+
+Example:
+
+int(1.2) would return 1.
+
+---------------------------------------------
+Identifiers
+---------------------------------------------
+
+Identifiers are defined the same as in C.  MC, however, is case sensitive.  For example, the keyword "if" is only recognized in its lowercase form.  Also, the underline symbol “_” is accepted as a letter.
+
+Examples: 
+
+x   scan   starMod   firstLetter   test1 word_with_separation
+
+The following identifiers are builtin read-only variables:
+
+Watch, FirmwareVersion, BatteryLevel, ProgramSlot, Message, Sensor1Raw, Sensor2Raw, Sensor3Raw, MotorAStatus, MotorBStatus, MotorCStatus, Sensor1, Sensor2, Sensor3, Sensor1Mode, Sensor2Mode, Sensor3Mode, Sensor1Type, Sensor2Type, Sensor3Type, Sensor1Bool, Sensor2Bool, Sensor3Bool, TaskEvent, TaskEvent0, TaskEvent1, TaskEvent2, TaskEvent3, TaskEvent4, TaskEvent5, TaskEvent6, TaskEvent7, TaskEvent8, TaskEvent9, Timer10ms0, Timer10ms1, Timer10ms2, Timer10ms3, Timer0, Timer1, Timer2, Timer3.
+
+---------------------------------------------
+Layout
+---------------------------------------------
+
+Write one statement per line, unless several simple statements, which together perform a single function, will fit on one line. It is acceptable to put a loop on a single line if it will fit. If a statement will not fit on a single line, indent the continuation line(s). A semicolon follows the last statement in a statement sequence.
+
+Leave a space after a comma or semicolon and none before. Surround "=" with spaces. A space should appear after left-comment and before right comment. Don’t put spaces inside brackets or parentheses or around single-character operations.
+
+---------------------------------------------
+RCX2/LASM Limitations
+---------------------------------------------
+
+Because of physical limitations with LASM and the RCX2, the following limitations are placed upon MC:
+
+Only 10 tasks can be declared.
+Only 8 methods can be declared (7 if const arrays are used).
+Only 31 global variables (non-Boolean).
+Only 15 Boolean global variables.
+Only 15 local variables (non-Boolean) per task.
+Only 15 Boolean local variables per task.
+Only 15 elements per Boolean array; each Boolean array counts as one variable.
+Procedure cannot call other procedures.
+Const arrays and Boolean cannot be used in procedures since both are implemented with a procedure call.
+
+---------------------------------------------
+Math Library
+---------------------------------------------
+
+Can only be invoked in tasks since one procedure cannot call another.
+The following macros can be used anywhere.
+#define CONST_E 2.7183  //2.7183
+#define CONST_PI 3.14159 //3.14159
+#define radianTodegree(x) (float(x)*57.2958)     //only good up to 5.7 radians due to overflow
+#define degreeToradian(x) (float(x)*1.745/100.0) //only good up to 180 degrees due to overflow
+
+//#define SQRT		enables sqrti and sqrtf
+//#define SINE          enables sinf
+//#define COSINE        enables cosf
+//#define LOG		enables logf and log10f
+//#define EXP		enables expf
+//#define TANGENT		enables tanf
+//#define HYPOT		enables hypoti, only valid for side lengths up to 127
+//#define ASINCOS		enables asinf and acosf
+//#define ATAN		enables atanf
+#include "math.h"
+
+The math functions must be enabled individually.  That way, there is no space penalty for unused functions.  The hypotenuse function (hypoti) takes two integer arguments and returns a float.
+Precision is limited so check your equations carefully.
+You can use math.h with MSVC in addition to the RCX with the same results.
+
+---------------------------------------------
+An example program -- test.txt
+---------------------------------------------
+#include "rcx2.h"
+#define HYPOT
+#include "math.h"
+float result;
+task main()
+{	int i;
+	i=10;
+	Show(result);  //only globals; displays value on RCX window
+	for (;--i>=0;) {
+		result=hypoti(i,i);
+		Wait(200);
+		PlaySystemSoundC(SOUND_ERROR);
+	}
+}
+
